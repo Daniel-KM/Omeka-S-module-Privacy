@@ -51,7 +51,7 @@ class Module extends AbstractModule
                 $response = ClientStatic::get('http://localhost' . $url);
             } catch (\Exception $e) {
                 throw new ModuleCannotInstallException(
-                    $t->translate('The module is unable to check if the current install is flock-secure.') // @translate
+                    $t->translate('The module is unable to check if the current install protects visitors against tracking and data theft via Google Chrome.') // @translate
                         . ' ' . $t->translate('See module’s installation documentation.') // @translate
                 );
             }
@@ -60,16 +60,19 @@ class Module extends AbstractModule
         $headers = $response->getHeaders();
         if (empty($headers)) {
             throw new ModuleCannotInstallException(
-                $t->translate('The module is not able to check if the current install is flock-secure.') // @translate
+                $t->translate('The module is not able to check if the current install protects visitors against tracking and data theft via Google Chrome.') // @translate
                     . ' ' . $t->translate('See module’s installation documentation.') // @translate
             );
         }
 
         $permissionsPolicy = $headers->get('Permissions-Policy');
         if (!empty($permissionsPolicy)) {
-            $messenger->addNotice('Your site is already configured and let unchanged.'); // @translate
-            $messenger->addNotice('The module can be uninstalled.'); // @translate
-            return;
+            $value = is_array($permissionsPolicy) ? implode(',', array_map('strval', $permissionsPolicy)) : (string) $permissionsPolicy->getFieldValue();
+            if (stripos($value, 'browsing-topics') !== false) {
+                $messenger->addNotice('Your site is already configured and let unchanged.'); // @translate
+                $messenger->addNotice('The module can be uninstalled.'); // @translate
+                return;
+            }
         }
 
         $htaccess = OMEKA_PATH . '/.htaccess';
@@ -105,7 +108,18 @@ class Module extends AbstractModule
         }
 
         $content = file_get_contents($htaccess);
-        if (stripos($content, 'Permissions-Policy') || stripos($content, 'interest-cohort')) {
+
+        // Migrate a legacy FLoC directive in place from "interest-cohort" to
+        // "browsing-topics" (Google Topics api).
+        if (stripos($content, 'interest-cohort') !== false && stripos($content, 'browsing-topics') === false) {
+            $content = preg_replace('~interest-cohort\s*=\s*\(\s*\)~i', 'browsing-topics=()', $content);
+            file_put_contents($htaccess, $content);
+            $messenger->addSuccess('The privacy header has been upgraded from FLoC ("interest-cohort") to Topics API ("browsing-topics") in your file ".htaccess".'); // @translate
+            $messenger->addNotice('The module can be uninstalled.'); // @translate
+            return;
+        }
+
+        if (stripos($content, 'browsing-topics') !== false) {
             $messenger->addNotice('Your site is already configured and let unchanged.'); // @translate
             $messenger->addNotice('The module can be uninstalled.'); // @translate
             return;
@@ -114,13 +128,13 @@ class Module extends AbstractModule
         $content .= <<<'HTACCESS'
 
 <IfModule mod_headers.c>
-    Header always set Permissions-Policy: interest-cohort=()
+    Header always set Permissions-Policy: browsing-topics=()
 </IfModule>
 
 HTACCESS;
         file_put_contents($htaccess, $content);
 
-        $messenger->addSuccess('The privacy anti-theft header has been added successfully to your file ".htaccess".'); // @translate
+        $messenger->addSuccess('The privacy anti-tracking/anti-data-theft header has been added successfully to your file ".htaccess".'); // @translate
         $messenger->addNotice('The module can be uninstalled.'); // @translate
     }
 }
