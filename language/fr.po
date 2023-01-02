@@ -7,34 +7,38 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-23 00:00+0000\n"
-"PO-Revision-Date: 2023-01-23 00:00+0000\n"
+"POT-Creation-Date: 2023-01-02 00:00+0000\n"
+"PO-Revision-Date: 2023-01-02 00:00+0000\n"
 "Last-Translator: Daniel Berthereau <Daniel.fr@Berthereau.net>\n"
 "Language-Team: \n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.2.2\n"
+"X-Generator: Poedit 3.6\n"
 
 #: Module.php:54
-msgid "The module is unable to check if the current install is flock-secure."
+msgid ""
+"The module is unable to check if the current install protects visitors "
+"against tracking and data theft via Google Chrome."
 msgstr ""
 "Le module n’est pas en mesure de vérifier si l’installation actuelle est "
-"sécurisée contre le profilage Flock."
+"sécurisée contre le profilage et le vol de données via Google Chrome."
 
-#: Module.php:55 Module.php:64 Module.php:79 Module.php:86 Module.php:96
-#: Module.php:103
+#: Module.php:55 Module.php:64 Module.php:82 Module.php:89 Module.php:99
+#: Module.php:106
 msgid "See module’s installation documentation."
 msgstr "Consulter la documentation d’installation du module."
 
 #: Module.php:63
-msgid "The module is not able to check if the current install is flock-secure."
+msgid ""
+"The module is not able to check if the current install protects visitors "
+"against tracking and data theft via Google Chrome."
 msgstr ""
 "Le module n’est pas en mesure de vérifier si l’installation actuelle est "
-"sécurisée contre le profilage Flock."
+"sécurisée contre le profilage et le vol de données via Google Chrome."
 
-#: Module.php:78
+#: Module.php:81
 msgid ""
 "It seems this installation doesn’t use the web server Apache: there is no "
 "file \".htaccess\" at the root of Omeka."
@@ -42,7 +46,7 @@ msgstr ""
 "Il semble que cette installation n’utilise pas le serveur web Apache : aucun "
 "fichier \".htaccess\" ne se trouve à la racine d’Omeka."
 
-#: Module.php:85
+#: Module.php:88
 msgid ""
 "The file \".htaccess\" at the root of Omeka is not writeable and cannot be "
 "updated by this module."
@@ -50,7 +54,7 @@ msgstr ""
 "Le fichier \".htaccess\" à la racine d’Omeka n’est pas modifiable et ne peut "
 "pas être mis à jour par ce module."
 
-#: Module.php:95
+#: Module.php:98
 msgid ""
 "It seems this installation doesn’t use the web server Apache: command "
 "\"apachectl\" is not available."
@@ -58,7 +62,7 @@ msgstr ""
 "Il semble que cette installation n’utilise pas le serveur web Apache : la "
 "commande \"apachectl\" n’est pas disponible."
 
-#: Module.php:102
+#: Module.php:105
 msgid ""
 "Apache is working, but its module \"headers\" is not enabled. Your admin "
 "should run command \"sudo a2enmod headers; sudo systemctl restart apache2\" "
@@ -68,21 +72,30 @@ msgstr ""
 "doit lancer la commande \"sudo a2enmod headers; sudo systemctl restart "
 "apache2\" pour l’activer."
 
-#: Module.php:70 Module.php:109
+#: Module.php:72 Module.php:123
 msgid "Your site is already configured and let unchanged."
 msgstr "Votre site est déjà configuré et a été laissé inchangé."
 
-#: Module.php:71 Module.php:110 Module.php:124
+#: Module.php:73 Module.php:118 Module.php:124 Module.php:138
 msgid "The module can be uninstalled."
 msgstr "Le module peut être désinstallé."
 
-#: Module.php:123
+#: Module.php:117
 msgid ""
-"The privacy anti-theft header has been added successfully to your file \"."
-"htaccess\"."
+"The privacy header has been upgraded from FLoC (\"interest-cohort\") to "
+"Topics API (\"browsing-topics\") in your file \".htaccess\"."
 msgstr ""
-"L’entête antivol de la vie privée a été ajoutée avec succès au fichier \"."
-"htaccess\"."
+"L'en-tête de confidentialité a été mis à niveau de FLoC (\"interest-"
+"cohort\") vers Topics API (\"browsing-topics\") dans votre fichier "
+"\".htaccess\"."
+
+#: Module.php:137
+msgid ""
+"The privacy anti-tracking/anti-data-theft header has been added successfully "
+"to your file \".htaccess\"."
+msgstr ""
+"L’entête antivol de la vie privée et données a été ajoutée avec succès au "
+"fichier \".htaccess\"."
 
 #, php-format
 #~ msgid "This module requires the module \"%s\"."
