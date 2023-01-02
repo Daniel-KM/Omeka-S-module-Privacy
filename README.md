@@ -6,32 +6,50 @@ No Google Chrome Flock Tracking (module for Omeka S)
 > than the previous repository.__
 
 [No Google Chrome Flock Tracking] is a module for [Omeka S] that adds a HTTP
-header to invite Google not to track visitors via the browser Chrome. Indeed,
-with the new versions of Chrome and derivative browsers, Google steals directly
-your browsing history even if you forbid it, creates a profile, and gives access
-to it to any other tracking tool via a unique flock identifier.
+header to forbid Google to track visitors via Chrome and derivative browsers.
 
-Of course, this tracking is currently illegal in most of the countries, whatever
-Google says, but now this header is required to invite Google to respect the law
-(there will be a small fine in some years). More information to [clean up the web]
-or [in French].
+Indeed, with the new versions of Chrome and derivative browsers, Google steals
+directly your browsing history even if you forbid it, creates a profile, and
+gives access to it to any other tracking tool via a unique flock identifier
+(abandoned) or via a list of browsing interests.
 
-You can check your current browser on [amifloced.org].
+The [Topics API] is not a web standard because it is rejected by privacy
+supporters like Mozilla (Firefox) and Apple (Safari), but supported by Google
+and implemented in Chrome and derivative browsers, mainly Microsoft Edge.
+
+Note on the module and privacy
+------------------------------
+
+Originally the module disabled the [FLoC] ("Federated Learning of Cohorts") API
+through the `interest-cohort` directive of the `Permissions-Policy` header.
+FLoC was abandoned by Google in 2022 and replaced by the [Topics API], part of
+the so-called ironically "Privacy Sandbox" (the privacy is protected against
+hackers, **except** Google, ad sellers that buy your data through Google, and
+any American state agency via the Patriot Act). The Topics API still profiles
+visitors from their browsing history inside Chrome and shares topics with
+advertisers.
+
+This tracking remains illegal in most countries (GDPR / ePrivacy), whatever
+Google says, but this header is required to explicitly forbid Google to include
+the visitor activity on this site in their interest profile.
 
 This module can be used in conjunction with the module [EU Cookie Bar], that
-warns about the tracking by cookies when Google analytics or Facebook buttons
+warns about the tracking by cookies when Google Analytics or Facebook buttons
 are used to steal data of your visitors.
 
-This module is useless if you can access to the config of your server or if you
-can add this in the Apache file ".htaccess" at the root of Omeka:
+This module is useless if you can access the config of your server or if you
+can add the line below in the Apache file ".htaccess" at the root of Omeka.
+The Topics API is opted out site-wide by sending the header:
 
 ```.htaccess
-Header always set Permissions-Policy: interest-cohort=()
+Header always set Permissions-Policy: browsing-topics=()
 ```
 
-This module simply adds these lines automatically if not present, after some
-checks. Once installed, the module can be removed. Of course, it is better to
-include the line above in the main config files of Apache.
+The module simply adds this line automatically if not present, after some
+checks. If a previous FLoC directive (`interest-cohort=()`) is found, it is
+upgraded in place to `browsing-topics=()`. Once installed, the module can be
+removed. Of course, it is better to include the line above in the main config
+files of Apache.
 
 Important: The Apache module "headers" must be enabled first:
 
@@ -40,12 +58,12 @@ sudo a2enmod headers
 sudo systemctl restart apache2
 ```
 
-Nginx and other servers are currently not supported. You can find details of
-config for them [here].
+Nginx and other servers are currently not supported. The equivalent directive
+is the same header value, set at the server level.
 
-Note that the header must be added to any response, not only to the Omeka ones:
-if the assets (images, js, css…) are not protected, Google will add (or maybe
-not) the site in the visitor profile anyway.
+Note that the header must be added to any response, not only to the Omeka
+ones: if the assets (images, js, css…) are not protected, Google will add (or
+maybe not) the site in the visitor profile anyway.
 
 
 Installation
@@ -117,10 +135,8 @@ Copyright
 
 [No Google Chrome Flock Tracking]: https://gitlab.com/Daniel-KM/Omeka-S-module-NoGoogleChromeFlockTracking
 [Omeka S]: https://omeka.org/s
-[amifloced.org]: https://amifloced.org
-[clean up the web]: https://cleanuptheweb.org
-[in French]: https://framablog.org/2021/04/20/developpeurs-developpeuses-nettoyez-le-web
-[here]: https://paramdeo.com/blog/opting-your-website-out-of-googles-floc-network
+[Topics API]: https://developer.mozilla.org/en-US/docs/Web/API/Topics_API
+[FLoC]: https://amifloced.org
 [EU Cookie Bar]: https://gitlab.com/Daniel-KM/Omeka-S-module-EUCookieBar
 [installing a module]: https://dev.omeka.org/docs/s/user-manual/modules/#installing-modules
 [NoGoogleChromeFlockTracking.zip]: https://gitlab.com/Daniel-KM/Omeka-S-module-NoGoogleChromeFlockTracking/-/releases
