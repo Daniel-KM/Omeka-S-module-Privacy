@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-02 00:00+0000\n"
+"POT-Creation-Date: 2026-06-01 00:00+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,63 +17,70 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: Module.php:54
+#: Module.php:62
 msgid ""
 "The module is unable to check if the current install protects visitors "
 "against tracking and data theft via Google Chrome."
 msgstr ""
 
-#: Module.php:55 Module.php:64 Module.php:82 Module.php:89 Module.php:99
-#: Module.php:106
+#: Module.php:63 Module.php:72 Module.php:90 Module.php:97 Module.php:107
+#: Module.php:114
 msgid "See module’s installation documentation."
 msgstr ""
 
-#: Module.php:63
+#: Module.php:71
 msgid ""
 "The module is not able to check if the current install protects visitors "
 "against tracking and data theft via Google Chrome."
 msgstr ""
 
-#: Module.php:81
+#: Module.php:89
 msgid ""
 "It seems this installation doesn’t use the web server Apache: there is no "
 "file \".htaccess\" at the root of Omeka."
 msgstr ""
 
-#: Module.php:88
+#: Module.php:96
 msgid ""
 "The file \".htaccess\" at the root of Omeka is not writeable and cannot be "
 "updated by this module."
 msgstr ""
 
-#: Module.php:98
+#: Module.php:106
 msgid ""
 "It seems this installation doesn’t use the web server Apache: command "
 "\"apachectl\" is not available."
 msgstr ""
 
-#: Module.php:105
+#: Module.php:113
 msgid ""
 "Apache is working, but its module \"headers\" is not enabled. Your admin "
 "should run command \"sudo a2enmod headers; sudo systemctl restart apache2\" "
 "to enable it."
 msgstr ""
 
-#: Module.php:72 Module.php:123
+#: Module.php:40
+#, php-format
+msgid ""
+"This module is deprecated and has been superceded by %1$sPrivacy%2$s. The "
+"upgrade from it is automatic."
+msgstr ""
+
+#: Module.php:80 Module.php:131
 msgid "Your site is already configured and let unchanged."
 msgstr ""
 
-#: Module.php:73 Module.php:118 Module.php:124 Module.php:138
+#: Module.php:81 Module.php:126 Module.php:132 Module.php:146
 msgid "The module can be uninstalled."
 msgstr ""
 
-#: Module.php:117
+#: Module.php:125
 msgid ""
 "The privacy header has been upgraded from FLoC (\"interest-cohort\") to "
 "Topics API (\"browsing-topics\") in your file \".htaccess\"."
 msgstr ""
 
-#: Module.php:137
+#: Module.php:145
 msgid ""
 "The privacy anti-tracking/anti-data-theft header has been added successfully "
 "to your file \".htaccess\"."
