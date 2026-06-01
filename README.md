@@ -1,6 +1,9 @@
 No Google Chrome Flock Tracking (module for Omeka S)
 ====================================================
 
+> ***IMPORTANT***: This module is deprecated and has been replaced by the module
+> [Privacy] and won’t be updated any more. The upgrade from it is automatic.
+
 > __New versions of this module and support for Omeka S version 3.0 and above
 > are available on [GitLab], which seems to respect users and privacy better
 > than the previous repository.__
@@ -16,6 +19,12 @@ gives access to it to any other tracking tool via a unique flock identifier
 The [Topics API] is not a web standard because it is rejected by privacy
 supporters like Mozilla (Firefox) and Apple (Safari), but supported by Google
 and implemented in Chrome and derivative browsers, mainly Microsoft Edge.
+
+**Remember**: the only difference between Google (the same for Facebook,
+Microsoft, Apple, etc.) and any hacker on the web is the fact that you checked a
+box (or not) to agree CGU (regularly updated without your real consent) some
+years ago when you installed it.
+
 
 Note on the module and privacy
 ------------------------------
@@ -130,9 +139,10 @@ of the CeCILL license and that you accept its terms.
 Copyright
 ---------
 
-* Copyright Daniel Berthereau, 2021-2023 (see [Daniel-KM] on GitLab)
+* Copyright Daniel Berthereau, 2021-2026 (see [Daniel-KM] on GitLab)
 
 
+[Privacy]: https://gitlab.com/Daniel-KM/Omeka-S-module-Privacy
 [No Google Chrome Flock Tracking]: https://gitlab.com/Daniel-KM/Omeka-S-module-NoGoogleChromeFlockTracking
 [Omeka S]: https://omeka.org/s
 [Topics API]: https://developer.mozilla.org/en-US/docs/Web/API/Topics_API
