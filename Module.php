@@ -107,6 +107,12 @@ class Module extends AbstractModule
         $settings = $services->get('Omeka\Settings');
         $defaults = $services->get('Config')['privacy']['config'];
 
+        // Re-run the Apache/header check at every page load so the admin sees
+        // the current status (and the .htaccess is upgraded/added on the fly if
+        // it became writeable after a previous failed install).
+        $messenger = $services->get('ControllerPluginManager')->get('messenger');
+        $this->checkHeaderSetup($services, $messenger);
+
         $data = [];
         foreach ($defaults as $name => $value) {
             $data[$name] = $settings->get($name, $value);
@@ -144,13 +150,11 @@ class Module extends AbstractModule
     public function install(ServiceLocatorInterface $services): void
     {
         $messenger = $services->get('ControllerPluginManager')->get('messenger');
-        $t = $services->get('MvcTranslator');
 
-        // Store default settings.
-        // Done first, so they are set even if the htaccess header check below
-        // cannot complete on this server.
-        // The module config is not merged into Config yet at install, so read
-        // and write defaults early via getConfig() from TraitModule.
+        // Store default settings. Done first, so they are set even if the
+        // htaccess header check below cannot complete on this server. The
+        // module config is not merged into Config yet at install, so read and
+        // write defaults early via getConfig() from TraitModule.
         $settings = $services->get('Omeka\Settings');
         $defaults = $this->getConfig()['privacy']['config'] ?? [];
         foreach ($defaults as $name => $value) {
@@ -159,6 +163,19 @@ class Module extends AbstractModule
             }
         }
 
+        $this->checkHeaderSetup($services, $messenger);
+    }
+
+    /**
+     * Probe the current install for the Permissions-Policy header and write
+     * (or upgrade) the directive in the root .htaccess when possible. Called
+     * both at install time and every time the config form is rendered, so a
+     * site that became compliant later (e.g. after fixing permissions) is
+     * picked up automatically. Any failure produces a warning instead of an
+     * exception: the module is functional even without the header.
+     */
+    protected function checkHeaderSetup(ServiceLocatorInterface $services, $messenger): void
+    {
         $viewHelpers = $services->get('ViewHelperManager');
         $serverUrl = $viewHelpers->get('serverUrl');
         $assetUrl = $viewHelpers->get('assetUrl');
@@ -190,7 +207,6 @@ class Module extends AbstractModule
         if (!empty($permissionsPolicy)) {
             $value = is_array($permissionsPolicy) ? implode(',', array_map('strval', $permissionsPolicy)) : (string) $permissionsPolicy->getFieldValue();
             if (stripos($value, 'browsing-topics') !== false) {
-                $messenger->addNotice('Your site is already configured and let unchanged.'); // @translate
                 $this->removeLegacyModule($services, $messenger);
                 return;
             }
@@ -237,7 +253,6 @@ class Module extends AbstractModule
         }
 
         if (stripos($content, 'browsing-topics') !== false) {
-            $messenger->addNotice('Your site is already configured and let unchanged.'); // @translate
             $this->removeLegacyModule($services, $messenger);
             return;
         }
