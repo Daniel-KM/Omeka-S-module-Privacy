@@ -21,7 +21,7 @@ class Module extends AbstractModule
             'translator' => [
                 'translation_file_patterns' => [
                     [
-                        'type' => 'gettext',
+                        'type' => \Laminas\I18n\Translator\Loader\Gettext::class,
                         'base_dir' => __DIR__ . '/language',
                         'pattern' => '%s.mo',
                         'text_domain' => null,
