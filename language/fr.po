@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-01 00:00+0000\n"
+"POT-Creation-Date: \n"
 "PO-Revision-Date: 2026-06-01 00:00+0000\n"
 "Last-Translator: Daniel Berthereau <Daniel.fr@Berthereau.net>\n"
 "Language-Team: \n"
@@ -17,52 +17,60 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.6\n"
 
-#: Module.php:62
+#: Module.php:193
 msgid ""
 "The module is unable to check if the current install protects visitors "
-"against tracking and data theft via Google Chrome."
+"against tracking and data theft via Google Chrome. See module’s installation "
+"documentation to set the header manually."
 msgstr ""
 "Le module n’est pas en mesure de vérifier si l’installation actuelle est "
-"sécurisée contre le profilage et le vol de données via Google Chrome."
+"sécurisée contre le profilage et le vol de données via Google Chrome. "
+"Consulter la documentation d’installation du module pour définir l’en-tête "
+"http manuellement."
 
-#: Module.php:63 Module.php:72 Module.php:90 Module.php:97 Module.php:107
-#: Module.php:114
-msgid "See module’s installation documentation."
-msgstr "Consulter la documentation d’installation du module."
-
-#: Module.php:71
+#: Module.php:201
 msgid ""
 "The module is not able to check if the current install protects visitors "
-"against tracking and data theft via Google Chrome."
+"against tracking and data theft via Google Chrome. See module’s installation "
+"documentation to set the header manually."
 msgstr ""
 "Le module n’est pas en mesure de vérifier si l’installation actuelle est "
-"sécurisée contre le profilage et le vol de données via Google Chrome."
+"sécurisée contre le profilage et le vol de données via Google Chrome. "
+"Consulter la documentation d’installation du module pour définir l’en-tête "
+"http manuellement."
 
-#: Module.php:89
+#: Module.php:217
 msgid ""
 "It seems this installation doesn’t use the web server Apache: there is no "
-"file \".htaccess\" at the root of Omeka."
+"file \".htaccess\" at the root of Omeka. See module’s installation "
+"documentation to set the header manually."
 msgstr ""
 "Il semble que cette installation n’utilise pas le serveur web Apache : aucun "
-"fichier \".htaccess\" ne se trouve à la racine d’Omeka."
+"fichier \".htaccess\" ne se trouve à la racine d’Omeka. Consulter la "
+"documentation d’installation du module pour définir l’en-tête http "
+"manuellement."
 
-#: Module.php:96
+#: Module.php:223
 msgid ""
 "The file \".htaccess\" at the root of Omeka is not writeable and cannot be "
-"updated by this module."
+"updated by this module. See module’s installation documentation to set the "
+"header manually."
 msgstr ""
 "Le fichier \".htaccess\" à la racine d’Omeka n’est pas modifiable et ne peut "
-"pas être mis à jour par ce module."
+"pas être mis à jour par ce module. Consulter la documentation d’installation "
+"du module pour définir l’en-tête http manuellement."
 
-#: Module.php:106
+#: Module.php:232
 msgid ""
 "It seems this installation doesn’t use the web server Apache: command "
-"\"apachectl\" is not available."
+"\"apachectl\" is not available. See module’s installation documentation to "
+"set the header manually."
 msgstr ""
 "Il semble que cette installation n’utilise pas le serveur web Apache : la "
-"commande \"apachectl\" n’est pas disponible."
+"commande \"apachectl\" n’est pas disponible. Consulter la documentation "
+"d’installation du module pour définir l’en-tête http manuellement."
 
-#: Module.php:113
+#: Module.php:238
 msgid ""
 "Apache is working, but its module \"headers\" is not enabled. Your admin "
 "should run command \"sudo a2enmod headers; sudo systemctl restart apache2\" "
@@ -72,24 +80,7 @@ msgstr ""
 "doit lancer la commande \"sudo a2enmod headers; sudo systemctl restart "
 "apache2\" pour l’activer."
 
-#: Module.php:40
-#, php-format
-msgid ""
-"This module is deprecated and has been superceded by %1$sPrivacy%2$s. The "
-"upgrade from it is automatic."
-msgstr ""
-"Ce module est déprécié et remplacé par %1$sPrivacy%2$s. La mise à niveau est "
-"automatique."
-
-#: Module.php:80 Module.php:131
-msgid "Your site is already configured and let unchanged."
-msgstr "Votre site est déjà configuré et a été laissé inchangé."
-
-#: Module.php:81 Module.php:126 Module.php:132 Module.php:146
-msgid "The module can be uninstalled."
-msgstr "Le module peut être désinstallé."
-
-#: Module.php:125
+#: Module.php:250
 msgid ""
 "The privacy header has been upgraded from FLoC (\"interest-cohort\") to "
 "Topics API (\"browsing-topics\") in your file \".htaccess\"."
@@ -98,13 +89,72 @@ msgstr ""
 "cohort\") vers Topics API (\"browsing-topics\") dans votre fichier "
 "\".htaccess\"."
 
-#: Module.php:145
+#: Module.php:269
 msgid ""
 "The privacy anti-tracking/anti-data-theft header has been added successfully "
 "to your file \".htaccess\"."
 msgstr ""
 "L’entête antivol de la vie privée et données a été ajoutée avec succès au "
 "fichier \".htaccess\"."
+
+#: Module.php:292
+msgid ""
+"The deprecated module \"NoGoogleChromeFlockTracking\" has been removed from "
+"the modules table. Its files on disk can be deleted manually."
+msgstr ""
+"Le module obsolète \"NoGoogleChromeFlockTracking\" a été supprimé du tableau "
+"des modules. Ses fichiers sur le disque peuvent être supprimés manuellement."
+
+#: src/Form/ConfigForm.php:17
+msgid "Google Fonts policy"
+msgstr "Politique relative aux polices Google"
+
+#: src/Form/ConfigForm.php:21
+msgid ""
+"Choose how to handle external Google Fonts requests (fonts.googleapis.com / "
+"fonts.gstatic.com)."
+msgstr ""
+"Définir comment traiter les requêtes Google Fonts externes "
+"(fonts.googleapis.com / fonts.gstatic.com)."
+
+#: src/Form/ConfigForm.php:23
+msgid ""
+"Replace only the fonts bundled with this module (Lato, Source Code Pro, Open "
+"Sans): identical look, third-party fonts kept"
+msgstr ""
+"Remplace uniquement les polices fournies avec ce module (Lato, Source Code "
+"Pro, Open Sans) : même visuel, polices tierces conservées"
+
+#: src/Form/ConfigForm.php:24
+msgid ""
+"Block every Google Fonts request: non-bundled families fall back to the "
+"browser CSS"
+msgstr ""
+"Bloquer toutes les requêtes Google Fonts : les polices non groupées "
+"utilisent les CSS du navigateur"
+
+#: src/Form/ConfigForm.php:25
+msgid "Keep all Google Fonts requests (no privacy protection)"
+msgstr ""
+"Conserver toutes les requêtes Google Fonts (pas de protection de la vie "
+"privée)"
+
+#~ msgid "Your site is already configured and let unchanged."
+#~ msgstr "Votre site est déjà configuré et a été laissé inchangé."
+
+#~ msgid "See module’s installation documentation."
+#~ msgstr "Consulter la documentation d’installation du module."
+
+#, php-format
+#~ msgid ""
+#~ "This module is deprecated and has been superceded by %1$sPrivacy%2$s. The "
+#~ "upgrade from it is automatic."
+#~ msgstr ""
+#~ "Ce module est déprécié et remplacé par %1$sPrivacy%2$s. La mise à niveau "
+#~ "est automatique."
+
+#~ msgid "The module can be uninstalled."
+#~ msgstr "Le module peut être désinstallé."
 
 #, php-format
 #~ msgid "This module requires the module \"%s\"."
