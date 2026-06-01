@@ -1,7 +1,7 @@
 {
     "name": "daniel-km/omeka-s-module-no-google-chrome-flock-tracking",
     "type": "omeka-s-module",
-    "description": "Module for Omeka S: Add a HTTP header to the site to invite Google not to track visitors with a flock identifier via Chrome and derivative browsers",
+    "description": "Module for Omeka S: Add a HTTP header to the site to invite Google not to track visitors with a flock identifier via Chrome and derivative browsers. Deprecated and replaced by daniel-km/omeka-s-module-privacy.",
     "keywords": [
         "Omeka S",
         "Omeka S module",
