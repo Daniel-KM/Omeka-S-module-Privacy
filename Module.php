@@ -16,7 +16,6 @@ use Laminas\Mvc\Controller\AbstractController;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\View\Renderer\PhpRenderer;
 use Omeka\Module\AbstractModule;
-use Omeka\Module\Exception\ModuleCannotInstallException;
 
 /**
  * Privacy.
@@ -174,19 +173,17 @@ class Module extends AbstractModule
             try {
                 $response = ClientStatic::get('http://localhost' . $url);
             } catch (\Throwable $e) {
-                throw new ModuleCannotInstallException(
-                    $t->translate('The module is unable to check if the current install protects visitors against tracking and data theft via Google Chrome.') // @translate
-                        . ' ' . $t->translate('See module’s installation documentation.') // @translate
-                );
+                $messenger->addWarning('The module is unable to check if the current install protects visitors against tracking and data theft via Google Chrome. See module’s installation documentation to set the header manually.'); // @translate
+                $this->removeLegacyModule($services, $messenger);
+                return;
             }
         }
 
         $headers = $response->getHeaders();
         if (empty($headers)) {
-            throw new ModuleCannotInstallException(
-                $t->translate('The module is not able to check if the current install protects visitors against tracking and data theft via Google Chrome.') // @translate
-                    . ' ' . $t->translate('See module’s installation documentation.') // @translate
-            );
+            $messenger->addWarning('The module is not able to check if the current install protects visitors against tracking and data theft via Google Chrome. See module’s installation documentation to set the header manually.'); // @translate
+            $this->removeLegacyModule($services, $messenger);
+            return;
         }
 
         $permissionsPolicy = $headers->get('Permissions-Policy');
@@ -201,34 +198,30 @@ class Module extends AbstractModule
 
         $htaccess = OMEKA_PATH . '/.htaccess';
         if (!file_exists($htaccess) || !is_readable($htaccess)) {
-            throw new ModuleCannotInstallException(
-                $t->translate('It seems this installation doesn’t use the web server Apache: there is no file ".htaccess" at the root of Omeka.') // @translate
-                    . ' ' . $t->translate('See module’s installation documentation.') // @translate
-            );
+            $messenger->addWarning('It seems this installation doesn’t use the web server Apache: there is no file ".htaccess" at the root of Omeka. See module’s installation documentation to set the header manually.'); // @translate
+            $this->removeLegacyModule($services, $messenger);
+            return;
         }
 
         if (!is_writeable($htaccess)) {
-            throw new ModuleCannotInstallException(
-                $t->translate('The file ".htaccess" at the root of Omeka is not writeable and cannot be updated by this module.') // @translate
-                    . ' ' . $t->translate('See module’s installation documentation.') // @translate
-            );
+            $messenger->addWarning('The file ".htaccess" at the root of Omeka is not writeable and cannot be updated by this module. See module’s installation documentation to set the header manually.'); // @translate
+            $this->removeLegacyModule($services, $messenger);
+            return;
         }
 
         $cli = $services->get('Omeka\Cli');
         $command = 'apachectl -t -D DUMP_MODULES';
         $output = $cli->execute($command);
         if ($output === false) {
-            throw new ModuleCannotInstallException(
-                $t->translate('It seems this installation doesn’t use the web server Apache: command "apachectl" is not available.') // @translate
-                    . ' ' . $t->translate('See module’s installation documentation.') // @translate
-            );
+            $messenger->addWarning('It seems this installation doesn’t use the web server Apache: command "apachectl" is not available. See module’s installation documentation to set the header manually.'); // @translate
+            $this->removeLegacyModule($services, $messenger);
+            return;
         }
 
         if (!stripos($output, 'headers_module')) {
-            throw new ModuleCannotInstallException(
-                $t->translate('Apache is working, but its module "headers" is not enabled. Your admin should run command "sudo a2enmod headers; sudo systemctl restart apache2" to enable it.') // @translate
-                    . ' ' . $t->translate('See module’s installation documentation.') // @translate
-            );
+            $messenger->addWarning('Apache is working, but its module "headers" is not enabled. Your admin should run command "sudo a2enmod headers; sudo systemctl restart apache2" to enable it.'); // @translate
+            $this->removeLegacyModule($services, $messenger);
+            return;
         }
 
         $content = file_get_contents($htaccess);
