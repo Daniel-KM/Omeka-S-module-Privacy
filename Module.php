@@ -42,14 +42,14 @@ class Module extends AbstractModule
         $url = $assetUrl('css/style.css', 'Omeka', false, false);
         try {
             $response = ClientStatic::get($serverUrl($url));
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
         }
 
         // In some cases, the server cannot get its own url.
         if (empty($response)) {
             try {
                 $response = ClientStatic::get('http://localhost' . $url);
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 throw new ModuleCannotInstallException(
                     $t->translate('The module is unable to check if the current install protects visitors against tracking and data theft via Google Chrome.') // @translate
                         . ' ' . $t->translate('See module’s installation documentation.') // @translate
