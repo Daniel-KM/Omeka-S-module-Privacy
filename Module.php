@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace NoGoogleChromeFlockTracking;
+namespace Privacy;
 
 use Laminas\Http\ClientStatic;
 use Laminas\ServiceManager\ServiceLocatorInterface;
@@ -8,7 +8,7 @@ use Omeka\Module\AbstractModule;
 use Omeka\Module\Exception\ModuleCannotInstallException;
 
 /**
- * No Google Chrome Flock Tracking.
+ * Privacy.
  *
  * @copyright Daniel Berthereau 2021-2026
  * @license http://www.cecill.info/licences/Licence_CeCILL_V2.1-en.txt
@@ -35,14 +35,6 @@ class Module extends AbstractModule
     {
         $messenger = $services->get('ControllerPluginManager')->get('messenger');
         $t = $services->get('MvcTranslator');
-
-        $message = new Message(
-            'This module is deprecated and has been superceded by %1$sPrivacy%2$s. The upgrade from it is automatic.', // @translate
-            '<a href="https://gitlab.com/Daniel-KM/Omeka-S-module-Privacy" target="_blank" rel="noopener noreferrer">',
-            '</a>'
-        );
-        $message->setEscapeHtml(false);
-        $messenger->addWarning($message);
 
         $viewHelpers = $services->get('ViewHelperManager');
         $serverUrl = $viewHelpers->get('serverUrl');

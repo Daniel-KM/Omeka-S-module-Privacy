@@ -1,15 +1,12 @@
-No Google Chrome Flock Tracking (module for Omeka S)
-====================================================
-
-> ***IMPORTANT***: This module is deprecated and has been replaced by the module
-> [Privacy] and won’t be updated any more. The upgrade from it is automatic.
+Privacy (module for Omeka S)
+============================
 
 > __New versions of this module and support for Omeka S version 3.0 and above
 > are available on [GitLab], which seems to respect users and privacy better
 > than the previous repository.__
 
-[No Google Chrome Flock Tracking] is a module for [Omeka S] that adds a HTTP
-header to forbid Google to track visitors via Chrome and derivative browsers.
+[Privacy] is a module for [Omeka S] that adds a HTTP header to forbid Google to
+track visitors and steal user data via Chrome and derivative browsers.
 
 Indeed, with the new versions of Chrome and derivative browsers, Google steals
 directly your browsing history even if you forbid it, creates a profile, and
@@ -82,13 +79,13 @@ See general end user documentation for [installing a module].
 
 * From the zip
 
-Download the last release [NoGoogleChromeFlockTracking.zip] from the list of releases, and
+Download the last release [Privacy.zip] from the list of releases, and
 uncompress it in the `modules` directory.
 
 * From the source and for development
 
 If the module was installed from the source, rename the name of the folder of
-the module to `NoGoogleChromeFlockTracking`.
+the module to `Privacy`.
 
 
 Warning
@@ -141,19 +138,22 @@ Copyright
 
 * Copyright Daniel Berthereau, 2021-2026 (see [Daniel-KM] on GitLab)
 
+This module is based on [No Google Chrome Flock Tracking], the first module used
+to fix Google.
+
 
 [Privacy]: https://gitlab.com/Daniel-KM/Omeka-S-module-Privacy
-[No Google Chrome Flock Tracking]: https://gitlab.com/Daniel-KM/Omeka-S-module-NoGoogleChromeFlockTracking
 [Omeka S]: https://omeka.org/s
 [Topics API]: https://developer.mozilla.org/en-US/docs/Web/API/Topics_API
 [FLoC]: https://amifloced.org
 [EU Cookie Bar]: https://gitlab.com/Daniel-KM/Omeka-S-module-EUCookieBar
 [installing a module]: https://dev.omeka.org/docs/s/user-manual/modules/#installing-modules
-[NoGoogleChromeFlockTracking.zip]: https://gitlab.com/Daniel-KM/Omeka-S-module-NoGoogleChromeFlockTracking/-/releases
-[module issues]: https://gitlab.com/Daniel-KM/Omeka-S-module-NoGoogleChromeFlockTracking/-/issues
+[Privacy.zip]: https://gitlab.com/Daniel-KM/Omeka-S-module-Privacy/-/releases
+[module issues]: https://gitlab.com/Daniel-KM/Omeka-S-module-Privacy/-/issues
 [CeCILL v2.1]: https://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html
 [GNU/GPL]: https://www.gnu.org/licenses/gpl-3.0.html
 [FSF]: https://www.fsf.org
 [OSI]: https://opensource.org
+[No Google Chrome Flock Tracking]: https://gitlab.com/Daniel-KM/Omeka-S-module-NoGoogleChromeFlockTracking
 [GitLab]: https://gitlab.com/Daniel-KM
 [Daniel-KM]: https://gitlab.com/Daniel-KM "Daniel Berthereau"

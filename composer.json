@@ -1,7 +1,7 @@
 {
-    "name": "daniel-km/omeka-s-module-no-google-chrome-flock-tracking",
+    "name": "daniel-km/omeka-s-module-privacy",
     "type": "omeka-s-module",
-    "description": "Module for Omeka S: Add a HTTP header to the site to invite Google not to track visitors with a flock identifier via Chrome and derivative browsers. Deprecated and replaced by daniel-km/omeka-s-module-privacy.",
+    "description": "Module for Omeka S: Add a HTTP header to the site to invite Google not to track visitors via Chrome and derivative browsers",
     "keywords": [
         "Omeka S",
         "Omeka S module",
@@ -11,7 +11,7 @@
         "chrome"
     ],
     "license": "CECILL-2.1",
-    "homepage": "https://gitlab.com/Daniel-KM/Omeka-S-module-NoGoogleChromeFlockTracking",
+    "homepage": "https://gitlab.com/Daniel-KM/Omeka-S-module-Privacy",
     "authors": [
         {
             "name": "Daniel Berthereau",
@@ -19,7 +19,7 @@
         }
     ],
     "support": {
-        "issues": "https://gitlab.com/Daniel-KM/Omeka-S-module-NoGoogleChromeFlockTracking/-/issues",
+        "issues": "https://gitlab.com/Daniel-KM/Omeka-S-module-Privacy/-/issues",
         "forum": "https://forum.omeka.org/"
     },
     "_require (not set until Omeka S merges PR #2432)": {
@@ -27,15 +27,15 @@
     },
     "autoload": {
         "psr-4": {
-            "NoGoogleChromeFlockTracking\\": "src/"
+            "Privacy\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "NoGoogleChromeFlockTrackingTest\\": "tests/NoGoogleChromeFlockTrackingTest/"
+            "PrivacyTest\\": "tests/PrivacyTest/"
         }
     },
     "extra": {
-        "installer-name": "NoGoogleChromeFlockTracking"
+        "installer-name": "Privacy"
     }
 }
