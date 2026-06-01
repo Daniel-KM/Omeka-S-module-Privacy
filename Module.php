@@ -194,6 +194,7 @@ class Module extends AbstractModule
             $value = is_array($permissionsPolicy) ? implode(',', array_map('strval', $permissionsPolicy)) : (string) $permissionsPolicy->getFieldValue();
             if (stripos($value, 'browsing-topics') !== false) {
                 $messenger->addNotice('Your site is already configured and let unchanged.'); // @translate
+                $this->removeLegacyModule($services, $messenger);
                 return;
             }
         }
@@ -238,11 +239,13 @@ class Module extends AbstractModule
             $content = preg_replace('~interest-cohort\s*=\s*\(\s*\)~i', 'browsing-topics=()', $content);
             file_put_contents($htaccess, $content);
             $messenger->addSuccess('The privacy header has been upgraded from FLoC ("interest-cohort") to Topics API ("browsing-topics") in your file ".htaccess".'); // @translate
+            $this->removeLegacyModule($services, $messenger);
             return;
         }
 
         if (stripos($content, 'browsing-topics') !== false) {
             $messenger->addNotice('Your site is already configured and let unchanged.'); // @translate
+            $this->removeLegacyModule($services, $messenger);
             return;
         }
 
@@ -256,5 +259,29 @@ HTACCESS;
         file_put_contents($htaccess, $content);
 
         $messenger->addSuccess('The privacy anti-tracking/anti-data-theft header has been added successfully to your file ".htaccess".'); // @translate
+        $this->removeLegacyModule($services, $messenger);
+    }
+
+    /**
+     * Drop the legacy NoGoogleChromeFlockTracking row from the "module" table
+     * once Privacy is installed successfully, so the deprecated module stops
+     * appearing in the admin modules list. The on-disk module directory is left
+     * untouched and can be removed manually.
+     */
+    protected function removeLegacyModule(ServiceLocatorInterface $services, $messenger): void
+    {
+        try {
+            /** @var \Doctrine\DBAL\Connection $connection */
+            $connection = $services->get('Omeka\Connection');
+            $affected = (int) $connection->executeStatement(
+                'DELETE FROM module WHERE id = ?',
+                ['NoGoogleChromeFlockTracking']
+            );
+        } catch (\Throwable $e) {
+            return;
+        }
+        if ($affected > 0) {
+            $messenger->addNotice('The deprecated module "NoGoogleChromeFlockTracking" has been removed from the modules table. Its files on disk can be deleted manually.'); // @translate
+        }
     }
 }
