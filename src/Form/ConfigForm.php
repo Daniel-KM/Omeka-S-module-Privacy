@@ -12,13 +12,22 @@ class ConfigForm extends Form
         $this
             ->add([
                 'name' => 'privacy_google_fonts',
-                'type' => Element\Checkbox::class,
+                'type' => Element\Radio::class,
                 'options' => [
-                    'label' => 'Allow external Google Fonts', // @translate
-                    'info' => 'When unchecked (default), the module self-hosts the fonts used by the admin (Lato, Source Code Pro) and the bundled default theme (Open Sans), so no request is sent to fonts.googleapis.com or fonts.gstatic.com. The fonts are identical, so the look is unchanged. Check this option to keep loading fonts from Google.', // @translate
+                    'label' => 'Google Fonts policy', // @translate
+                    'label_attributes' => [
+                        'style' => 'display: block;',
+                    ],
+                    'info' => 'Choose how to handle external Google Fonts requests (fonts.googleapis.com / fonts.gstatic.com).', // @translate
+                    'value_options' => [
+                        'bundled' => 'Replace only the fonts bundled with this module (Lato, Source Code Pro, Open Sans): identical look, third-party fonts kept', // @translate
+                        'block' => 'Block every Google Fonts request: non-bundled families fall back to the browser CSS', // @translate
+                        'allow' => 'Keep all Google Fonts requests (no privacy protection)', // @translate
+                    ],
                 ],
                 'attributes' => [
                     'id' => 'privacy_google_fonts',
+                    'value' => 'bundled',
                 ],
             ]);
     }

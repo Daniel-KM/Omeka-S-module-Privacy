@@ -20,11 +20,15 @@ return [
     ],
     'privacy' => [
         'config' => [
-            // Allow external Google Fonts (admin: Lato, Source Code Pro;
-            // bundled default theme: Open Sans). Disabled by default: the
-            // module self-hosts the same fonts so no request is sent to
-            // fonts.googleapis.com or fonts.gstatic.com.
-            'privacy_google_fonts' => false,
+            // Policy applied to external Google Fonts requests:
+            // - "bundled" (default): strip only the families self-hosted by
+            //   this module (Lato, Source Code Pro, Open Sans) and replace them
+            //   by the local versions; other Google Fonts requested by
+            //   third-party themes are kept to preserve their look;
+            // - "block": strip every fonts.googleapis.com / fonts.gstatic.com
+            //   request; non-bundled families fall back to the CSS stack;
+            // - "allow": keep all Google Fonts requests as is.
+            'privacy_google_fonts' => 'bundled',
         ],
     ],
 ];

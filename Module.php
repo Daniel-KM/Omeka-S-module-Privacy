@@ -52,7 +52,8 @@ class Module extends AbstractModule
     public function handleExternalFonts(Event $event): void
     {
         $settings = $this->getServiceLocator()->get('Omeka\Settings');
-        if ($settings->get('privacy_google_fonts', false)) {
+        $policy = (string) $settings->get('privacy_google_fonts', 'bundled');
+        if ($policy === 'allow') {
             return;
         }
 
@@ -61,24 +62,44 @@ class Module extends AbstractModule
         $headLink = $view->headLink();
         $container = $headLink->getContainer();
 
+        // Family tokens self-hosted by this module, in their URL-encoded forms
+        // as found in Google Fonts hrefs.
+        $bundledTokens = ['lato', 'open+sans', 'open%20sans', 'source+code+pro', 'source%20code%20pro'];
+
         $items = $container->getArrayCopy();
-        $removed = false;
+        $bundledRemoved = false;
+        $anyRemoved = false;
         foreach ($items as $key => $item) {
             $href = isset($item->href) ? (string) $item->href : '';
-            if ($href !== '' && preg_match('~fonts\.(?:googleapis|gstatic)\.com~i', $href)) {
-                unset($items[$key]);
-                $removed = true;
+            if ($href === '' || !preg_match('~fonts\.(?:googleapis|gstatic)\.com~i', $href)) {
+                continue;
             }
+            $hrefLower = strtolower($href);
+            $matchesBundled = false;
+            foreach ($bundledTokens as $token) {
+                if (strpos($hrefLower, $token) !== false) {
+                    $matchesBundled = true;
+                    break;
+                }
+            }
+            if ($policy === 'bundled' && !$matchesBundled) {
+                continue;
+            }
+            unset($items[$key]);
+            $anyRemoved = true;
+            $bundledRemoved = $bundledRemoved || $matchesBundled;
         }
 
-        // Nothing external to replace (already self-hosted): leave the page as
-        // is to avoid loading a redundant stylesheet.
-        if (!$removed) {
+        if (!$anyRemoved) {
             return;
         }
 
         $container->exchangeArray(array_values($items));
-        $headLink->appendStylesheet($view->assetUrl('css/fonts.css', 'Privacy'));
+        // The local stylesheet only covers bundled families: skip it when no
+        // bundled link was actually replaced.
+        if ($bundledRemoved) {
+            $headLink->appendStylesheet($view->assetUrl('css/fonts.css', 'Privacy'));
+        }
     }
 
     public function getConfigForm(PhpRenderer $renderer): string
@@ -114,8 +135,9 @@ class Module extends AbstractModule
         }
 
         $data = $form->getData();
-        foreach (array_keys($defaults) as $name) {
-            $settings->set($name, !empty($data[$name]));
+        foreach ($defaults as $name => $default) {
+            $value = $data[$name] ?? $default;
+            $settings->set($name, is_bool($default) ? (bool) $value : $value);
         }
         return true;
     }
