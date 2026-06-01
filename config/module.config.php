@@ -18,6 +18,14 @@ return [
             Form\ConfigForm::class => Form\ConfigForm::class,
         ],
     ],
+    // Disable the external CDN assets declared by Omeka core (jQuery from
+    // code.jquery.com, Google Fonts stylesheet from fonts.googleapis.com). The
+    // local copies bundled with Omeka are used instead, so no third-party
+    // request is issued for these assets. Common's assetUrl factory reads this
+    // value, so no helper override is needed.
+    'assets' => [
+        'use_externals' => false,
+    ],
     'privacy' => [
         'config' => [
             // Policy applied to external Google Fonts requests:
