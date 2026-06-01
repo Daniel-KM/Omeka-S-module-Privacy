@@ -1,0 +1,86 @@
+/*
+ * Self-hosted replacement for the Google Fonts used by Omeka admin (Lato,
+ * Source Code Pro) and the bundled default theme (Open Sans). Loaded by the
+ * Privacy module when the option "Replace external fonts by local ones" is on,
+ * so no request is made to fonts.googleapis.com / fonts.gstatic.com.
+ */
+
+@font-face {
+    font-family: "Lato";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url("../fonts/lato-regular.woff2") format("woff2");
+}
+@font-face {
+    font-family: "Lato";
+    font-style: italic;
+    font-weight: 400;
+    font-display: swap;
+    src: url("../fonts/lato-italic.woff2") format("woff2");
+}
+@font-face {
+    font-family: "Lato";
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url("../fonts/lato-700.woff2") format("woff2");
+}
+@font-face {
+    font-family: "Lato";
+    font-style: italic;
+    font-weight: 700;
+    font-display: swap;
+    src: url("../fonts/lato-700italic.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: "Source Code Pro";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url("../fonts/source-code-pro-regular.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: "Open Sans";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url("../fonts/open-sans-400.woff2") format("woff2");
+}
+@font-face {
+    font-family: "Open Sans";
+    font-style: italic;
+    font-weight: 400;
+    font-display: swap;
+    src: url("../fonts/open-sans-400italic.woff2") format("woff2");
+}
+@font-face {
+    font-family: "Open Sans";
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url("../fonts/open-sans-600.woff2") format("woff2");
+}
+@font-face {
+    font-family: "Open Sans";
+    font-style: italic;
+    font-weight: 600;
+    font-display: swap;
+    src: url("../fonts/open-sans-600italic.woff2") format("woff2");
+}
+@font-face {
+    font-family: "Open Sans";
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url("../fonts/open-sans-700.woff2") format("woff2");
+}
+@font-face {
+    font-family: "Open Sans";
+    font-style: italic;
+    font-weight: 700;
+    font-display: swap;
+    src: url("../fonts/open-sans-700italic.woff2") format("woff2");
+}

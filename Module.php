@@ -2,8 +2,19 @@
 
 namespace Privacy;
 
+if (!class_exists('Common\TraitModule', false)) {
+    require_once file_exists(dirname(__DIR__) . '/Common/src/TraitModule.php')
+        ? dirname(__DIR__) . '/Common/src/TraitModule.php'
+        : dirname(__DIR__) . '/Common/TraitModule.php';
+}
+
+use Common\TraitModule;
+use Laminas\EventManager\Event;
+use Laminas\EventManager\SharedEventManagerInterface;
 use Laminas\Http\ClientStatic;
+use Laminas\Mvc\Controller\AbstractController;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\View\Renderer\PhpRenderer;
 use Omeka\Module\AbstractModule;
 use Omeka\Module\Exception\ModuleCannotInstallException;
 
@@ -15,26 +26,117 @@ use Omeka\Module\Exception\ModuleCannotInstallException;
  */
 class Module extends AbstractModule
 {
-    public function getConfig()
+    use TraitModule;
+
+    const NAMESPACE = __NAMESPACE__;
+
+    public function attachListeners(SharedEventManagerInterface $sharedEventManager): void
     {
-        return [
-            'translator' => [
-                'translation_file_patterns' => [
-                    [
-                        'type' => \Laminas\I18n\Translator\Loader\Gettext::class,
-                        'base_dir' => __DIR__ . '/language',
-                        'pattern' => '%s.mo',
-                        'text_domain' => null,
-                    ],
-                ],
-            ],
-        ];
+        // On every admin and public page, the layout triggers "view.layout"
+        // after the stylesheets are registered and before the head is rendered,
+        // so the external font links can be replaced there.
+        $sharedEventManager->attach(
+            '*',
+            'view.layout',
+            [$this, 'handleExternalFonts']
+        );
+    }
+
+    /**
+     * Replace external font stylesheets (Google Fonts) by the local ones.
+     *
+     * Works whether the link is added through assetUrl or hardcoded in a layout
+     * (admin, public core layout, default theme), because it acts on the
+     * headLink container after it is filled.
+     */
+    public function handleExternalFonts(Event $event): void
+    {
+        $settings = $this->getServiceLocator()->get('Omeka\Settings');
+        if ($settings->get('privacy_google_fonts', false)) {
+            return;
+        }
+
+        /** @var \Laminas\View\Renderer\PhpRenderer $view */
+        $view = $event->getTarget();
+        $headLink = $view->headLink();
+        $container = $headLink->getContainer();
+
+        $items = $container->getArrayCopy();
+        $removed = false;
+        foreach ($items as $key => $item) {
+            $href = isset($item->href) ? (string) $item->href : '';
+            if ($href !== '' && preg_match('~fonts\.(?:googleapis|gstatic)\.com~i', $href)) {
+                unset($items[$key]);
+                $removed = true;
+            }
+        }
+
+        // Nothing external to replace (already self-hosted): leave the page as
+        // is to avoid loading a redundant stylesheet.
+        if (!$removed) {
+            return;
+        }
+
+        $container->exchangeArray(array_values($items));
+        $headLink->appendStylesheet($view->assetUrl('css/fonts.css', 'Privacy'));
+    }
+
+    public function getConfigForm(PhpRenderer $renderer): string
+    {
+        $services = $this->getServiceLocator();
+        $settings = $services->get('Omeka\Settings');
+        $defaults = $services->get('Config')['privacy']['config'];
+
+        $data = [];
+        foreach ($defaults as $name => $value) {
+            $data[$name] = $settings->get($name, $value);
+        }
+
+        $form = $services->get('FormElementManager')->get(Form\ConfigForm::class);
+        $form->init();
+        $form->setData($data);
+
+        return $renderer->formCollection($form);
+    }
+
+    public function handleConfigForm(AbstractController $controller): bool
+    {
+        $services = $this->getServiceLocator();
+        $settings = $services->get('Omeka\Settings');
+        $defaults = $services->get('Config')['privacy']['config'];
+
+        $form = $services->get('FormElementManager')->get(Form\ConfigForm::class);
+        $form->init();
+        $form->setData($controller->getRequest()->getPost());
+        if (!$form->isValid()) {
+            $controller->messenger()->addErrors($form->getMessages());
+            return false;
+        }
+
+        $data = $form->getData();
+        foreach (array_keys($defaults) as $name) {
+            $settings->set($name, !empty($data[$name]));
+        }
+        return true;
     }
 
     public function install(ServiceLocatorInterface $services): void
     {
         $messenger = $services->get('ControllerPluginManager')->get('messenger');
         $t = $services->get('MvcTranslator');
+
+        // Store default settings.
+        // Done first, so they are set even if the htaccess header check below
+        // cannot complete on this server.
+        // The module config is not merged into Config yet at install, so read
+        // and write defaults early via getConfig() from TraitModule.
+        $settings = $services->get('Omeka\Settings');
+        $defaults = $this->getConfig()['privacy']['config'] ?? [];
+        foreach ($defaults as $name => $value) {
+            if ($settings->get($name) === null) {
+                $settings->set($name, $value);
+            }
+        }
 
         $viewHelpers = $services->get('ViewHelperManager');
         $serverUrl = $viewHelpers->get('serverUrl');
@@ -70,7 +172,6 @@ class Module extends AbstractModule
             $value = is_array($permissionsPolicy) ? implode(',', array_map('strval', $permissionsPolicy)) : (string) $permissionsPolicy->getFieldValue();
             if (stripos($value, 'browsing-topics') !== false) {
                 $messenger->addNotice('Your site is already configured and let unchanged.'); // @translate
-                $messenger->addNotice('The module can be uninstalled.'); // @translate
                 return;
             }
         }
@@ -115,13 +216,11 @@ class Module extends AbstractModule
             $content = preg_replace('~interest-cohort\s*=\s*\(\s*\)~i', 'browsing-topics=()', $content);
             file_put_contents($htaccess, $content);
             $messenger->addSuccess('The privacy header has been upgraded from FLoC ("interest-cohort") to Topics API ("browsing-topics") in your file ".htaccess".'); // @translate
-            $messenger->addNotice('The module can be uninstalled.'); // @translate
             return;
         }
 
         if (stripos($content, 'browsing-topics') !== false) {
             $messenger->addNotice('Your site is already configured and let unchanged.'); // @translate
-            $messenger->addNotice('The module can be uninstalled.'); // @translate
             return;
         }
 
@@ -135,6 +234,5 @@ HTACCESS;
         file_put_contents($htaccess, $content);
 
         $messenger->addSuccess('The privacy anti-tracking/anti-data-theft header has been added successfully to your file ".htaccess".'); // @translate
-        $messenger->addNotice('The module can be uninstalled.'); // @translate
     }
 }
