@@ -5,8 +5,16 @@ Privacy (module for Omeka S)
 > are available on [GitLab], which seems to respect users and privacy better
 > than the previous repository.__
 
-[Privacy] is a module for [Omeka S] that adds a HTTP header to forbid Google to
-track visitors and steal user data via Chrome and derivative browsers.
+[Privacy] is a module for [Omeka S] that protects visitors against tracking and
+data theft by third parties, mainly via Google Chrome and derivative browsers.
+
+Features of the module:
+- add a HTTP header to forbid Google to profile visitors via the anti-privacy
+  Topics API of Chrome and derivative browsers;
+- self-host Google Fonts used by the admin interface and the bundled default
+  theme, so no request is sent to `fonts.googleapis.com` or`fonts.gstatic.com`;
+- disable by default the external CDN assets declared in Omeka core config, used
+  by jQuery in particular, and serves the local copies instead.
 
 Indeed, with the new versions of Chrome and derivative browsers, Google steals
 directly your browsing history even if you forbid it, creates a profile, and
@@ -77,15 +85,71 @@ Installation
 
 See general end user documentation for [installing a module].
 
-* From the zip
+This module requires the module [Common], that should be installed first.
+
+- From the zip
 
 Download the last release [Privacy.zip] from the list of releases, and
 uncompress it in the `modules` directory.
 
-* From the source and for development
+- From the source and for development
 
 If the module was installed from the source, rename the name of the folder of
-the module to `Privacy`.
+the module to `Privacy`, go to the root of the module, and run:
+
+```sh
+composer install --no-dev
+```
+
+Then install it like any other Omeka module and follow the config instructions.
+
+- For test
+
+The module includes a comprehensive test suite with unit and functional tests.
+Run them from the root of Omeka:
+
+```sh
+vendor/bin/phpunit -c modules/Privacy/phpunit.xml --testdox
+```
+
+
+Configuration
+-------------
+
+The module ships with sensible defaults: once installed, no further setup is
+needed to block Google tracking, self-host the bundled fonts and stop the
+external asset CDNs declared by Omeka core. One option is exposed in the
+module configuration page to tune the Google Fonts behaviour.
+
+### External assets (CDN)
+
+The module forces `assets.use_externals` to `false` in the merged Omeka
+configuration, so the `assetUrl` view helper serves the local copies bundled
+with the core instead of the external CDNs declared under `assets.externals`
+(currently jQuery from `code.jquery.com` and the Google Fonts stylesheet served
+by Omeka). This is a build-time setting, not exposed in the UI.
+
+The cdn can be re-enabled in `config/local.config.php` at the root of Omeka.
+
+### Google Fonts policy
+
+Controls how `<link>` tags pointing to `fonts.googleapis.com` or
+`fonts.gstatic.com` are handled in every admin and public page. By default, only
+admin and default theme fonts are fixed. Set option "block" to strip every
+Google Fonts request, so non-bundled families fall back to the browser CSS stack
+
+Once the pull request [fix/self_host_google_fonts] will be merged in Omeka core,
+the admin fonts (Lato, Source Code Pro) will be self-hosted directly by Omeka.
+The option will remain useful to cover **Open Sans** (loaded by the bundled
+default theme, not included in the core PR) and any Google Fonts that a
+third-party theme may load on its own.
+
+
+TODO
+----
+
+- [ ] Use `sempia/external-assets` to bundle Google Fonts (`asset/fonts/*.woff2`) (probably useless because google fonts are fake-versioned but stable).
+- [ ] Anonymize new version notifications via another endpoint.
 
 
 Warning
@@ -148,7 +212,9 @@ to fix Google.
 [FLoC]: https://amifloced.org
 [EU Cookie Bar]: https://gitlab.com/Daniel-KM/Omeka-S-module-EUCookieBar
 [installing a module]: https://dev.omeka.org/docs/s/user-manual/modules/#installing-modules
+[Common]: https://gitlab.com/Daniel-KM/Omeka-S-module-Common
 [Privacy.zip]: https://gitlab.com/Daniel-KM/Omeka-S-module-Privacy/-/releases
+[fix/self_host_google_fonts]: https://github.com/omeka/omeka-s/pull/2126
 [module issues]: https://gitlab.com/Daniel-KM/Omeka-S-module-Privacy/-/issues
 [CeCILL v2.1]: https://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html
 [GNU/GPL]: https://www.gnu.org/licenses/gpl-3.0.html
